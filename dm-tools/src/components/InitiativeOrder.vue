@@ -47,9 +47,11 @@ const addCondition = (element) => {
     combatantStore.addCondition(selectedCondition.value, element.id) 
 
 }
-const deleteCondition = (element, condition) => {
-    
+const deleteCondition = (element, condition) => { 
     combatantStore.deleteCondition(condition, element.id)
+}
+const removeCombatant = (element) => {
+    combatantStore.removeCombatant(element)
 }
 
 </script>
@@ -60,6 +62,7 @@ const deleteCondition = (element, condition) => {
         <draggable v-model="combatantList">
             <template #item="{ element }" itemKey="element.id">
                 <div class="item">
+                    <button class="del-btn" @click="removeCombatant(element)">x</button>
                     <div class="name">
                         <h2>{{ element.name }}</h2>
                     </div>
@@ -67,6 +70,9 @@ const deleteCondition = (element, condition) => {
                         <div class="p-group">
                             <p>Roll: {{ element.initiativeRoll }}</p>
                             <p>Mod: {{ element.initiativeModifier }}</p>
+                        </div>
+                        <div class="p-group">
+                            <p>AC: {{ element.armorClass }}</p>
                         </div>
                         <div class="p-group" v-show="element.healthPoints > 0">
                             <p>HP: {{ element.healthPoints }}</p>
@@ -80,12 +86,11 @@ const deleteCondition = (element, condition) => {
                    <div class="sub-group">
                         <div class="p-group" >
                             <p>Add Condition</p>
-                                <div>
-                                    <select :id="'conditionSelect_' + element.id">
-                                        <option v-for="condition in dndConditions" :key="condition" :value="condition">{{ condition }}</option>
-                                    </select> 
-                                    <button @click="addCondition(element)">Add</button>
-                                </div>
+                                
+                                <select :id="'conditionSelect_' + element.id">
+                                    <option v-for="condition in dndConditions" :key="condition" :value="condition">{{ condition }}</option>
+                                </select> 
+                                <button @click="addCondition(element)">Add</button>
                             </div>
                             <div class="p-group" >
                             <p>Conditions:</p>
@@ -111,16 +116,20 @@ const deleteCondition = (element, condition) => {
     display: flex;
     justify-content: flex-start;
     margin-left: 2rem;
+    margin-bottom: .25rem;
     flex-direction: row;
     flex-wrap: wrap;
     border: solid black;
+    border-radius: 1.25rem;
+
 }
 .p-group{
     display: flex;
-    border: solid black;
-    width: 50%;
+    width: fit-content;
+    padding: .1rem;
     justify-content: space-evenly;
     align-items: center;
+    margin: 1rem 0rem 1rem 0;
 }
 .initiative-list{
     background: white;
@@ -138,6 +147,11 @@ const deleteCondition = (element, condition) => {
     flex-direction: column;
     flex-wrap: wrap;
     padding: .5rem;
+    position: relative;
+}
+.del-btn{
+    position: absolute;
+    right: 1rem;
 }
 input{
     width: 5rem;
@@ -151,11 +165,19 @@ ul{
 }
 li{
     display: flex;
-    justify-content: space-between;
+    justify-content: space-between;align-items: center;
     width: 10rem;
+}
+p{
+    margin: .25rem;
 }
 .deleteBtn{
     cursor: pointer;
+}
+button{
+    height: 1.5rem;
+    width: 2rem;
+
 }
 
 </style>
